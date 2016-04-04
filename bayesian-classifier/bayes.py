@@ -83,32 +83,21 @@ def make_table():
 def parse_line(input):
 	# inputfile = open("small.data")
 	# input = ["vhigh,low,3,more,big,low,unacc","low,vhigh,5more,4,big,high,acc"]
-	input_lines = []					# processed input
+	output = []					# processed input
 	# print input[0].split(",")
+	print "input:",input
 	for i in input:
-		t = i.split(",")
-		input_lines.extend([t])
-	print "input_lines:",input_lines
-	for i in input_lines:
-		print i
-
-	unacc = {'count':10,
-		 'buying':{'vhigh':3,'high':7},
-		 'maint':{'vhigh':2,'high':8}
-		 }
-	acc = {'count':6,
-		 'buying':{'vhigh':3,'high':3},
-		 'maint':{'vhigh':2,'high':4}
-		 }
-	print "before:\n", unacc
-	c = small[-1]
-	unacc['buying'][small[0]] += 1
-	print "after:\n", unacc
-
-	return input_lines
+		# print "i:",i
+		temp = i.split(",")
+		# print "temp",temp
+		'''for i in temp:
+			t = i.split(",")
+			output.extend([t])'''
+		output.extend([temp])
+	return output
 
 def update_table(table, input):
-	classification = input[-1]
+	classification = input[-1].rstrip()
 	print "classification:",classification
 	print table[classification]["buying"]["vhigh"]
 	
@@ -131,9 +120,11 @@ def update_table(table, input):
 def main():
 	table = make_table()
 	print "init table:",table
-	# input = ["vhigh,low,3,more,big,low,unacc","low,vhigh,5more,4,big,high,acc"]
-	# parsed = parse_line(input)
-	input2 = ["vhigh","low","3","more","big","low","unacc"]
-	table = update_table(table, input2)
+	input = ["vhigh,low,3,more,big,low,unacc\n","vhigh,low,3,more,big,low,unacc\n"]
+	parsed = parse_line(input)
+	print "parsed input:", parsed
+	# table = update_table(table, parsed)
+	# input2 = ["vhigh","low","3","more","big","low","unacc"]
+	# table = update_table(table, input2)
 	print "updated table:",table
 main()
