@@ -1,14 +1,12 @@
 '''
 Bayesian classifier for car data
-'''
-
-
-
-'''
-pseudocode:
-For each line in file:
-	Look at the last attribute for classification; remember this
-	For each attribute:
+data source:
+            http://archive.ics.uci.edu/ml/datasets/Car+Evaluation
+The data contain classification of cars into unacceptable to very good
+Car attributes include buying price, maintenance price, # doors,
+ capacity, luggage size, and safety estimate
+I am using 1000 of the car entries as training set; the remaining 728
+ are the training set
 
 Sample data structure:
 unacc = 10
@@ -32,8 +30,8 @@ acc = 32
 		.
 		.
 		.
-good = 
 
+Representation as dict:
 {"unacc":{count:10,buying:{vhigh:3,high:4...},maint:{vhigh...},...,"acc":{count:32,buying:{......}}}
 
 '''
@@ -81,20 +79,16 @@ def make_table():
 			}
 	return table
 
-
 def parse_lines(input):
-	# inputfile = open("small.data")
-	# input = ["vhigh,low,3,more,big,low,unacc","low,vhigh,5more,4,big,high,acc"]
+	'''
+	Convert txt file to a list of attribute strings
+	 for each data entry
+	'''
 	output = []					# processed input
-	# print input[0].split(",")
-	# print "input:",input
 	for i in input:
 		# print "i:",i
 		temp = i.split(",")
 		# print "temp",temp
-		'''for i in temp:
-			t = i.split(",")
-			output.extend([t])'''
 		output.extend([temp])
 	return output
 
@@ -135,31 +129,18 @@ def freq_table(table):
 	for i in table:
 		total_entries += table[i]['count']
 
-
 def main():
 	table = make_table()
 	print "init table:",table
-	
-	# input = ["vhigh,low,3,more,big,low,unacc\n","low,vhigh,3,more,big,low,unacc\n"]
-	# parsed = parse_lines(input)
-	# print "parsed input:", parsed
-	# for i in parsed:
-		# table = update_table(table, i)
-
-
-	# table = update_table(table, parsed)
-	# input2 = ["vhigh","low","3","more","big","low","unacc"]
-	# table = update_table(table, input2)
-	
 	inputfile = open("cartrain2.data")
 	inputstrings = inputfile.readlines()
 	parsed_input = parse_lines(inputstrings)
 	# print parsed_input
 	for i in parsed_input:
 		table = update_table(table, i)
-
 	print "updated table:",table
 	print "nice output:\n", 
 	display_table(table)
 	# freq_table(table)
+
 main()
