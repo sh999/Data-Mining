@@ -11,7 +11,6 @@ safety = ["low","med","high"]
 inputfile = open("small.data")
 attributes = [classifications, buying, maint, doors, persons, lug_boot, safety]
 
-small = "med,low,3,more,big,low,unacc"
 '''
 pseudocode:
 For each line in file:
@@ -42,5 +41,24 @@ acc = 32
 		.
 good = 
 
+{unacc:{count:10,buying:{vhigh:3,high:4...},maint:{vhigh...},...,acc:{count:32,buying:{......}}}
+
 '''
+small = ["vhigh,low,3,more,big,low,unacc","low,vhigh,5more,4,big,high,acc"]
+small = small.split(",")
+print "small:",small
+unacc = {'count':10,
+	 'buying':{'vhigh':3,'high':7},
+	 'maint':{'vhigh':2,'high':8}
+	 }
+acc = {'count':6,
+	 'buying':{'vhigh':3,'high':3},
+	 'maint':{'vhigh':2,'high':4}
+	 }
+print "before:\n", unacc
+c = small[-1]
+unacc['buying'][small[0]] += 1
+print "after:\n", unacc
+
+
 
