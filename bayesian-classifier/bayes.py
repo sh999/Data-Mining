@@ -80,7 +80,7 @@ def make_table():
 	return table
 
 
-def parse_line(input):
+def parse_lines(input):
 	# inputfile = open("small.data")
 	# input = ["vhigh,low,3,more,big,low,unacc","low,vhigh,5more,4,big,high,acc"]
 	output = []					# processed input
@@ -98,11 +98,10 @@ def parse_line(input):
 
 def update_table(table, input):
 	classification = input[-1].rstrip()
-	print "classification:",classification
-	print table[classification]["buying"]["vhigh"]
-	
+	table[classification]['count'] += 1
+	# print "classification:",classification	
 	for i, j in enumerate(input):
-		print "checking: ",i,"and",j
+		# print "checking: ",i,"and",j
 		if i == 0:
 			table[classification]["buying"][j] += 1
 		elif i == 1:
@@ -120,11 +119,26 @@ def update_table(table, input):
 def main():
 	table = make_table()
 	print "init table:",table
-	input = ["vhigh,low,3,more,big,low,unacc\n","vhigh,low,3,more,big,low,unacc\n"]
-	parsed = parse_line(input)
-	print "parsed input:", parsed
+	
+	# input = ["vhigh,low,3,more,big,low,unacc\n","low,vhigh,3,more,big,low,unacc\n"]
+	# parsed = parse_lines(input)
+	# print "parsed input:", parsed
+	# for i in parsed:
+		# table = update_table(table, i)
+
+
 	# table = update_table(table, parsed)
 	# input2 = ["vhigh","low","3","more","big","low","unacc"]
 	# table = update_table(table, input2)
+	
+	inputfile = open("small.data")
+	inputstrings = inputfile.readlines()
+	parsed_input = parse_lines(inputstrings)
+	print parsed_input
+	for i in parsed_input:
+		table = update_table(table, i)
+
+
 	print "updated table:",table
+
 main()
