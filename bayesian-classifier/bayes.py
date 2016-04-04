@@ -128,6 +128,16 @@ def freq_table(table):
 	total_entries = 0
 	for i in table:
 		total_entries += table[i]['count']
+	
+	for classification in table:
+		for attribute in table[classification]:
+			if attribute != 'count':
+				for value in table[classification][attribute]:
+					table[classification][attribute][value] /= float(table[classification]['count'])
+	for classification in table:
+		table[classification]['count'] /= float(total_entries)
+	return table
+
 
 def main():
 	table = make_table()
@@ -141,6 +151,8 @@ def main():
 	print "updated table:",table
 	print "nice output:\n", 
 	display_table(table)
-	# freq_table(table)
+	# f_table = freq_table(table)
+	f_table = freq_table(table)
+	display_table(f_table)
 
 main()
