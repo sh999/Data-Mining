@@ -139,6 +139,22 @@ def freq_table(table):
 	return table
 
 
+def odds(f_table, input):
+	'''
+	for entry in input:
+		classification = entry[-1].rstrip()
+		for i, attribute in enumerate(entry):
+			for value in attribute:
+				print f_table[classification][attribute][value]'''
+	input = input[0]
+	print "input:",input
+	classification = input[-1].rstrip()
+	a = ["buying","maint","doors","persons","lug_boot","safety"]
+	for i, j in enumerate(input):
+		odds = f_table[classification][a[i]][j]
+		print j, odds
+		
+
 def main():
 	table = make_table()
 	print "init table:",table
@@ -150,9 +166,14 @@ def main():
 		table = update_table(table, i)
 	print "updated table:",table
 	print "nice output:\n", 
-	display_table(table)
-	# f_table = freq_table(table)
+	# display_table(table)
 	f_table = freq_table(table)
 	display_table(f_table)
+
+	test = ["med,med,2,4,small,low,unacc\n","med,med,2,4,small,low,unacc\n"]
+	test = parse_lines(test)
+	print test
+	x = odds(f_table, test)
+
 
 main()
