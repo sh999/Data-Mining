@@ -213,7 +213,7 @@ def classify(training, testing):
 		testing_set = testing
 	table = make_table(training_set)
 	f_table = freq_table(table)
-	
+
 	# print "Bayesian classifier table:"
 	# display_table(f_table)
 	# print "=============================="
@@ -223,6 +223,9 @@ def classify(training, testing):
 if __name__ == "__main__":
 	# a = parse_lines("cartrain2.data")
 	# b = parse_lines("cartest2.data")
+	# a = [['med', 'med', '3', '2', 'med', 'med', 'unacc\n'], ['med', 'vhigh', '2', 'more', 'big', 'med', 'acc\n'], ['high', 'med', '4', 'more', 'med', 'high', 'acc\n']]
+	# b = [['med', 'vhigh', '2', 'more', 'big', 'med', 'acc\n'], ['vhigh', 'med', '2', '4', 'big', 'med', 'acc\n'], ['med', 'low', '2', 'more', 'small', 'med', 'unacc\n']]
 	# accuracy = classify(a, b)
+
 	accuracy = classify("cartrain2.data", "cartest2.data")
 	print "Accuracy:", accuracy

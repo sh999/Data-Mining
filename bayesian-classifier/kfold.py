@@ -50,16 +50,35 @@ def classify_folds(input_set, indices):
 	Run Bayesian classifier on input_set multiple times based on 
 	 given indices. Indices format is described in training_indices()
 	'''
-	print "input_set:",input_set
+	print "\n\ninput_set:",input_set
+	'''
 	for test_index, train_index in enumerate(indices):
 		print "test index:", test_index
 		print "train_index", train_index
 		testing_set = [input_set[test_index]]
 		print "testing_set:",testing_set
+		# training_set = input_set[train_index]
+		# print "training_set:",training_set
+
 		# classify([test_index], train_index)
+	'''
+	print "indices:", indices
+	testing_set = input_set[0]
+	print "testing_set:",testing_set
+	training_set = input_set[1]
+	print "training_set:",training_set
+	# print "accuracy:",classify(training_set, testing_set)
+	print "\n\n"
+	testing_set = input_set[0]
+	print "testing_set:",testing_set
+	training_set = input_set[2]
+	print "training_set:",training_set
+	# print "accuracy:",classify(training_set, testing_set)
+
+
 
 def main():
-	list_size = 12
+	list_size = 100
 	k = 4
 	# orig_list = [i for i in range(0,list_size)]
 	input_set = parse_lines("small.data")
