@@ -67,13 +67,18 @@ def classify_folds(input_set, indices):
 	print "testing_set:",testing_set
 	training_set = input_set[1]
 	print "training_set:",training_set
-	# print "accuracy:",classify(training_set, testing_set)
-	print "\n\n"
+	accuracy = classify(training_set, testing_set)
+	print "accuracy:",accuracy
+	
+
+	print "\n\ninput_set:",input_set
+	print "indices:", indices
 	testing_set = input_set[0]
 	print "testing_set:",testing_set
-	training_set = input_set[2]
+	training_set = input_set[1]
 	print "training_set:",training_set
-	# print "accuracy:",classify(training_set, testing_set)
+	accuracy = classify(training_set, testing_set)
+	print "accuracy:",accuracy
 
 
 
