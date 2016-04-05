@@ -70,7 +70,7 @@ def make_table():
 			"vgood":{
 					"count":0,
 					"buying":{"vghigh":0,"high":0,"med":0,"low":0},
-					"maint":{"vghigh":0,"high":0,"med":0,"low":0},
+					"maint":{"vhigh":0,"high":0,"med":0,"low":0},
 					"doors":{"2":0,"3":0,"4":0,"5more":0},
 					"persons":{"2":0,"4":0,"more":0},
 					"lug_boot":{"small":0,"med":0,"big":0},
@@ -150,29 +150,52 @@ def odds(f_table, input):
 	print "input:",input
 	classification = input[-1].rstrip()
 	a = ["buying","maint","doors","persons","lug_boot","safety"]
-	for i, j in enumerate(input):
-		odds = f_table[classification][a[i]][j]
-		print j, odds
+	happens = 1
+	for i in range(0,len(input)-1):
+		this_condit = f_table[classification][a[i]][input[i]]
+		happens = happens * this_condit
+		print input[i], this_condit, happens
+	print "this condit:", happens
+
+	other_classes = ["unacc","acc","good","vgood"]
+	all_condit = 0
+	print "\nother condits"
+	for c in other_classes:
+		odds = 1
+		print "classification", c
+		for i in range(0,len(input)-1):
+			this_condit2 = f_table[c][a[i]][input[i]]
+			odds = odds * this_condit2
+			print input[i], this_condit2, odds
+		all_condit += odds
+		print "odds:",odds
+		print "END CLASS\n"
+	print "this condit:", happens
+	print "all condit:", all_condit
+	final_odds = happens/all_condit
+	print "final odds:",final_odds
 		
 
 def main():
 	table = make_table()
-	print "init table:",table
+	# print "init table:",table
 	inputfile = open("cartrain2.data")
 	inputstrings = inputfile.readlines()
 	parsed_input = parse_lines(inputstrings)
 	# print parsed_input
 	for i in parsed_input:
 		table = update_table(table, i)
-	print "updated table:",table
+	# print "updated table:",table
 	print "nice output:\n", 
 	# display_table(table)
 	f_table = freq_table(table)
 	display_table(f_table)
 
-	test = ["med,med,2,4,small,low,unacc\n","med,med,2,4,small,low,unacc\n"]
+	# test = ["med,vhigh,2,more,big,med,acc\n","med,med,2,4,small,low,unacc\n"]
+	test = ["med,med,4,4,med,high,vgood\n","med,med,2,4,small,low,unacc\n"]
 	test = parse_lines(test)
 	print test
+	print "=============================="
 	x = odds(f_table, test)
 
 
