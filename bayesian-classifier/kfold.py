@@ -7,8 +7,8 @@ def training_indices(k):
 	'''
 	Calculate k bins, each bin has indices for training set
 	original_set[k] is tested against the training sets
-	k:4
-	elements:0,1,2,3
+	e.g. k:4
+	element indices:0,1,2,3
 
 	testing_set_index:training_set_index
 	0:1,2,3
@@ -17,6 +17,7 @@ def training_indices(k):
 	3:0,1,2
 
 	indices are used to run bayesian classification
+		classify()
 	'''
 	x = [i for i in range(0,k)]
 	indices = []
@@ -44,13 +45,28 @@ def randomize_list(k, orig_list):
 	print "randomized, partitioned:",random_list
 	return random_list
 
-def run_classifier():
-	pass
+def classify_folds(input_set, indices):
+	'''
+	Run Bayesian classifier on input_set multiple times based on 
+	 given indices. Indices format is described in training_indices()
+	'''
+	print "input_set:",input_set
+	for test_index, train_index in enumerate(indices):
+		print "test index:", test_index
+		print "train_index", train_index
+		testing_set = [input_set[test_index]]
+		print "testing_set:",testing_set
+		# classify([test_index], train_index)
 
-list_size = 12
-k = 4
-# orig_list = [i for i in range(0,list_size)]
-input_lines = parse_lines("small.data")
-print input_lines
-# randomize_list(k, orig_list)
-# training_indices(k)
+def main():
+	list_size = 12
+	k = 4
+	# orig_list = [i for i in range(0,list_size)]
+	input_set = parse_lines("small.data")
+	print input_set
+	input_set = randomize_list(k, input_set)
+	indices = training_indices(k)
+	classify_folds(input_set, indices)
+
+if __name__ == '__main__':
+	main()
