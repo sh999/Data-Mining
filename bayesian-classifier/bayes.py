@@ -157,13 +157,18 @@ def single_odds(f_table, input):
 	# print "this condit:", odds
 	return odds
 
-def classify(f_table, all_inputs):
+def get_accuracy(f_table, testing_set):
 	'''
-	Returns class that is predicted by Bayesian classifier
+	Input: Frequency table and testing set; testing set contains
+	 	   attribute values and classification. We're comparing
+	 	   the classifications to what the Bayesian classifier
+	 	   predicts
+	Returns: Accuracy (# of entries with same classification as
+			 Bayesian prediction/# of entries)
 	'''
 	match = 0.0
 	no_match = 0.0
-	for input in all_inputs:
+	for input in testing_set:
 		# print "==========================\n"
 		test_classification = input[-1].rstrip()
 		classifications = ["unacc","acc","good","vgood"]
@@ -192,17 +197,26 @@ def classify(f_table, all_inputs):
 		# print "Accuracy:", accuracy
 	return accuracy
 
-def main():
-	training_set = parse_lines("cartrain2.data")
-	testing_set = parse_lines("cartest2.data")
+def classify(training, testing):
+	'''
+	Wrapper for getting accuracy based on Bayesian prediction
+		See get_accuracy() for more description
+	Inputs: Filename string for training, testing set
+	Output: Accuracy of testing set classification 
+
+	'''
+	training_set = parse_lines(training)
+	testing_set = parse_lines(testing)
 	
 	table = make_table(training_set)
 	f_table = freq_table(table)
 	
-	print "Bayesian classifier table:"
-	display_table(f_table)
-	print "=============================="
-	print "Accuracy:", classify(f_table, testing_set)
+	# print "Bayesian classifier table:"
+	# display_table(f_table)
+	# print "=============================="
+	accuracy = get_accuracy(f_table, testing_set)
+	return accuracy
 
 if __name__ == "__main__":
-	main()
+	accuracy = classify("cartrain2.data", "cartest2.data")
+	print "Accuracy:", accuracy
