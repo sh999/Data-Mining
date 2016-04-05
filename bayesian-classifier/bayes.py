@@ -138,7 +138,6 @@ def freq_table(table):
 		table[classification]['count'] /= float(total_entries)
 	return table
 
-
 def single_odds(f_table, input):
 	'''
 	Input: All conditions with one classification
@@ -154,25 +153,46 @@ def single_odds(f_table, input):
 	# print "this condit:", odds
 	return odds
 
-def odds(f_table, input):
-	input = input[0]
-	classifications = ["unacc","acc","good","vgood"]
-	class_odds = {"unacc":0,"acc":0,"good":0,"vgood":0}
-	for c in classifications:
-		input[-1] = c
-		print "input:",input
-		odds = single_odds(f_table, input)
-		print "class",c,"odds:",odds
-		class_odds[c] = odds
-	print class_odds
-	# x = {1:2, 3:6, 5:4}
-	print "Bayes classification:",max(class_odds, key=lambda i: class_odds[i])
+def classify(f_table, all_inputs):
+	'''
+	Returns class that is predicted by Bayesian classifier
+	'''
+	match = 0.0
+	no_match = 0.0
+	for input in all_inputs:
+		# print "==========================\n"
+		test_classification = input[-1].rstrip()
+		classifications = ["unacc","acc","good","vgood"]
+		class_odds = {"unacc":0,"acc":0,"good":0,"vgood":0}
+		for c in classifications:
+			input[-1] = c
+			# print "input:",input
+			odds = single_odds(f_table, input)
+			# print "\tclass",c,"odds:",odds
+			class_odds[c] = odds
+		# print "\nAll class odds:",class_odds
+		prediction = max(class_odds, key=lambda i: class_odds[i])
+		# print "Bayes classification:", prediction
+		# print "Test classification:",test_classification
+		# print "Bayesian classification:", prediction
+		# print "Match?",
+		if prediction == test_classification:
+			match += 1
+			# print "YES"
+		else:
+			no_match += 1
+			# print "NO"
+		# print "# match:", match
+		# print "# no match:", no_match
+		accuracy = match/(match+no_match)
+		# print "Accuracy:", accuracy
+	return accuracy
 
 def main():
 	table = make_table()
 	# print "init table:",table
-	inputfile = open("cartrain2.data")
-	inputstrings = inputfile.readlines()
+	training_set = open("cartrain2.data")
+	inputstrings = training_set.readlines()
 	parsed_input = parse_lines(inputstrings)
 	# print parsed_input
 	for i in parsed_input:
@@ -180,14 +200,16 @@ def main():
 	# print "updated table:",table
 	# display_table(table)
 	f_table = freq_table(table)
-	# display_table(f_table)
+	display_table(f_table)
 
-	# test = ["med,vhigh,2,more,big,med,acc\n","med,med,2,4,small,low,unacc\n"]
-	test = ["vhigh,med,2,4,big,med,acc","med,med,2,4,small,low,unacc\n"]
-	test = parse_lines(test)
-	print test
+	# testing_set = ["med,vhigh,2,more,big,med,acc\n","med,med,2,4,small,low,unacc\n"]
+	# testing_set = ["vhigh,med,2,4,big,med,acc\n","med,med,2,4,small,low,vgood\n"]
+	testing_set = open("cartest2.data").readlines()
+	testing_set = parse_lines(testing_set)
+	# print "input:",testing_set
 	print "=============================="
-	x = odds(f_table, test)
+	print "Accuracy:", classify(f_table, testing_set)
+	# x = odds(f_table, test)
 
 
 main()
