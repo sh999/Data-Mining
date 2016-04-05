@@ -36,7 +36,7 @@ Representation as dict:
 
 '''
 
-def make_table():
+def make_table(training_set):
 	'''
 	Bayesian classifier table with absolute counts
 	'''
@@ -77,15 +77,19 @@ def make_table():
 					"safety":{"low":0,"med":0,"high":0}
 					}
 			}
+	for i in training_set:	# increment attribute values for all entries
+		table = update_table(table, i)
 	return table
 
-def parse_lines(input):
+def parse_lines(f):
 	'''
 	Convert txt file to a list of attribute strings
 	 for each data entry
 	'''
-	output = []					# processed input
-	for i in input:
+	training_set = open(f)
+	inputstrings = training_set.readlines()
+	output = []				# processed input
+	for i in inputstrings:
 		# print "i:",i
 		temp = i.split(",")
 		# print "temp",temp
@@ -189,27 +193,16 @@ def classify(f_table, all_inputs):
 	return accuracy
 
 def main():
-	table = make_table()
-	# print "init table:",table
-	training_set = open("cartrain2.data")
-	inputstrings = training_set.readlines()
-	parsed_input = parse_lines(inputstrings)
-	# print parsed_input
-	for i in parsed_input:
-		table = update_table(table, i)
-	# print "updated table:",table
-	# display_table(table)
+	training_set = parse_lines("cartrain2.data")
+	testing_set = parse_lines("cartest2.data")
+	
+	table = make_table(training_set)
 	f_table = freq_table(table)
+	
+	print "Bayesian classifier table:"
 	display_table(f_table)
-
-	# testing_set = ["med,vhigh,2,more,big,med,acc\n","med,med,2,4,small,low,unacc\n"]
-	# testing_set = ["vhigh,med,2,4,big,med,acc\n","med,med,2,4,small,low,vgood\n"]
-	testing_set = open("cartest2.data").readlines()
-	testing_set = parse_lines(testing_set)
-	# print "input:",testing_set
 	print "=============================="
 	print "Accuracy:", classify(f_table, testing_set)
-	# x = odds(f_table, test)
 
-
-main()
+if __name__ == "__main__":
+	main()
