@@ -205,9 +205,12 @@ def classify(training, testing):
 	Output: Accuracy of testing set classification 
 
 	'''
-	training_set = parse_lines(training)
-	testing_set = parse_lines(testing)
-	
+	if type(training) == str and type(testing) == str:
+		training_set = parse_lines(training)
+		testing_set = parse_lines(testing)
+	else:
+		training_set = training
+		testing_set = testing
 	table = make_table(training_set)
 	f_table = freq_table(table)
 	
@@ -218,5 +221,8 @@ def classify(training, testing):
 	return accuracy
 
 if __name__ == "__main__":
+	# a = parse_lines("cartrain2.data")
+	# b = parse_lines("cartest2.data")
+	# accuracy = classify(a, b)
 	accuracy = classify("cartrain2.data", "cartest2.data")
 	print "Accuracy:", accuracy
