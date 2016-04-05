@@ -69,7 +69,7 @@ def make_table():
 					},
 			"vgood":{
 					"count":0,
-					"buying":{"vghigh":0,"high":0,"med":0,"low":0},
+					"buying":{"vhigh":0,"high":0,"med":0,"low":0},
 					"maint":{"vhigh":0,"high":0,"med":0,"low":0},
 					"doors":{"2":0,"3":0,"4":0,"5more":0},
 					"persons":{"2":0,"4":0,"more":0},
@@ -139,42 +139,34 @@ def freq_table(table):
 	return table
 
 
-def odds(f_table, input):
+def single_odds(f_table, input):
 	'''
-	for entry in input:
-		classification = entry[-1].rstrip()
-		for i, attribute in enumerate(entry):
-			for value in attribute:
-				print f_table[classification][attribute][value]'''
-	input = input[0]
-	print "input:",input
-	classification = input[-1].rstrip()
+	Input: All conditions with one classification
+	Returns: Odds of this condition to have this classification
+	'''
+	classification = input[-1]
 	a = ["buying","maint","doors","persons","lug_boot","safety"]
-	happens = 1
+	odds = 1
 	for i in range(0,len(input)-1):
 		this_condit = f_table[classification][a[i]][input[i]]
-		happens = happens * this_condit
-		print input[i], this_condit, happens
-	print "this condit:", happens
+		odds = odds * this_condit
+		# print input[i], this_condit, odds
+	# print "this condit:", odds
+	return odds
 
-	other_classes = ["unacc","acc","good","vgood"]
-	all_condit = 0
-	print "\nother condits"
-	for c in other_classes:
-		odds = 1
-		print "classification", c
-		for i in range(0,len(input)-1):
-			this_condit2 = f_table[c][a[i]][input[i]]
-			odds = odds * this_condit2
-			print input[i], this_condit2, odds
-		all_condit += odds
-		print "odds:",odds
-		print "END CLASS\n"
-	print "this condit:", happens
-	print "all condit:", all_condit
-	final_odds = happens/all_condit
-	print "final odds:",final_odds
-		
+def odds(f_table, input):
+	input = input[0]
+	classifications = ["unacc","acc","good","vgood"]
+	class_odds = {"unacc":0,"acc":0,"good":0,"vgood":0}
+	for c in classifications:
+		input[-1] = c
+		print "input:",input
+		odds = single_odds(f_table, input)
+		print "class",c,"odds:",odds
+		class_odds[c] = odds
+	print class_odds
+	# x = {1:2, 3:6, 5:4}
+	print "Bayes classification:",max(class_odds, key=lambda i: class_odds[i])
 
 def main():
 	table = make_table()
@@ -186,13 +178,12 @@ def main():
 	for i in parsed_input:
 		table = update_table(table, i)
 	# print "updated table:",table
-	print "nice output:\n", 
 	# display_table(table)
 	f_table = freq_table(table)
-	display_table(f_table)
+	# display_table(f_table)
 
 	# test = ["med,vhigh,2,more,big,med,acc\n","med,med,2,4,small,low,unacc\n"]
-	test = ["med,med,4,4,med,high,vgood\n","med,med,2,4,small,low,unacc\n"]
+	test = ["vhigh,med,2,4,big,med,acc","med,med,2,4,small,low,unacc\n"]
 	test = parse_lines(test)
 	print test
 	print "=============================="
