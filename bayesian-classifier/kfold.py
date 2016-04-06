@@ -3,6 +3,7 @@ K-fold cross validation
 '''
 import random
 from bayes import *
+import copy
 def training_indices(k):
 	'''
 	Calculate k bins, each bin has indices for training set
@@ -62,6 +63,8 @@ def classify_folds(input_set, indices):
 
 		# classify([test_index], train_index)
 	'''
+	orig = copy.deepcopy(input_set)
+	print "orig:",orig
 	print "indices:", indices
 	testing_set = input_set[0]
 	print "testing_set:",testing_set
@@ -70,16 +73,15 @@ def classify_folds(input_set, indices):
 	accuracy = classify(training_set, testing_set)
 	print "accuracy:",accuracy
 	
-
+	input_set = copy.deepcopy(orig)
 	print "\n\ninput_set:",input_set
 	print "indices:", indices
 	testing_set = input_set[0]
 	print "testing_set:",testing_set
-	training_set = input_set[1]
+	training_set = input_set[2]
 	print "training_set:",training_set
 	accuracy = classify(training_set, testing_set)
 	print "accuracy:",accuracy
-
 
 
 def main():
