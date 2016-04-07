@@ -54,17 +54,23 @@ def classify_folds(input_set, indices):
 	
 	print "\n\ninput_set:",input_set
 	all_accuracies = []
+	average_accuracies = []
 	for test_index, all_train_sets in enumerate(indices):
 		print "test index:", test_index
 		test_set = input_set[test_index]
 		print "testing set:", test_set
 		print "training indices:", all_train_sets
+		all_accuracies.append([])
+		average_accuracies.append([])
 		for train_index in all_train_sets:
 			train_set = input_set[train_index]
 			print "training set:", train_set
 			accuracy = classify(test_set,train_set)
-			all_accuracies.extend([accuracy])
-			print "accuracy:", accuracy
+			all_accuracies[test_index].extend([accuracy])
+		current_average = sum(all_accuracies[test_index])/3.0
+		average_accuracies[test_index].extend([current_average])
+
+		print "accuracy:", accuracy
 		print "\n"
 
 		# training_set = input_set[train_index]
@@ -72,16 +78,17 @@ def classify_folds(input_set, indices):
 
 		# classify([test_index], train_index)
 	print "all accs:", all_accuracies
-	max_acc = max(all_accuracies)
-	max_index = all_accuracies.index(max_acc)
+	# max_acc = max(all_accuracies)
+	# max_index = all_accuracies.index(max_acc)
 	
 	flat_indices = [x for y in indices for x in y]	# flatten list of lists
 	print "flat:", flat_indices
 	# best_training = input_set[max_index]
 
-	print "average acc:", sum(all_accuracies)/len(all_accuracies)
-	print "highest acc:", max_acc
-	print "list:", max_index
+	# print "average acc:", sum(all_accuracies)/len(all_accuracies)
+	# print "highest acc:", max_acc
+	# print "list:", max_index
+	print "average accs:", average_accuracies
 	# print "training set best:", best_training
 
 	
