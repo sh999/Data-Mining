@@ -51,17 +51,29 @@ def classify_folds(input_set, indices):
 	Run Bayesian classifier on input_set multiple times based on 
 	 given indices. Indices format is described in training_indices()
 	'''
+	
 	print "\n\ninput_set:",input_set
-	'''
-	for test_index, train_index in enumerate(indices):
+	all_accuracies = []
+	for test_index, all_train_sets in enumerate(indices):
 		print "test index:", test_index
-		print "train_index", train_index
-		testing_set = [input_set[test_index]]
-		print "testing_set:",testing_set
+		test_set = input_set[test_index]
+		print "testing set:", test_set
+		print "training indices:", all_train_sets
+		for train_index in all_train_sets:
+			train_set = input_set[train_index]
+			print "training set:", train_set
+			accuracy = classify(test_set,train_set)
+			all_accuracies.extend([accuracy])
+			print "accuracy:", accuracy
+		print "\n"
+
 		# training_set = input_set[train_index]
 		# print "training_set:",training_set
 
 		# classify([test_index], train_index)
+	print "all accs:", all_accuracies
+	print "average acc:", sum(all_accuracies)/len(all_accuracies)
+	
 	'''
 	orig = copy.deepcopy(input_set)
 	print "orig:",orig
@@ -71,7 +83,7 @@ def classify_folds(input_set, indices):
 	training_set = input_set[1]
 	print "training_set:",training_set
 	accuracy = classify(training_set, testing_set)
-	print "accuracy:",accuracy
+	# print "accuracy:",accuracy
 	
 	input_set = copy.deepcopy(orig)
 	print "\n\ninput_set:",input_set
@@ -81,14 +93,14 @@ def classify_folds(input_set, indices):
 	training_set = input_set[2]
 	print "training_set:",training_set
 	accuracy = classify(training_set, testing_set)
-	print "accuracy:",accuracy
+	# print "accuracy:",accuracy'''
 
 
 def main():
-	list_size = 100
+	list_size = 1000
 	k = 4
 	# orig_list = [i for i in range(0,list_size)]
-	input_set = parse_lines("small.data")
+	input_set = parse_lines("cartrain2.data")
 	print input_set
 	input_set = randomize_list(k, input_set)
 	indices = training_indices(k)

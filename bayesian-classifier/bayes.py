@@ -35,7 +35,7 @@ Representation as dict:
 {"unacc":{count:10,buying:{vhigh:3,high:4...},maint:{vhigh...},...,"acc":{count:32,buying:{......}}}
 
 '''
-
+import copy
 def make_table(training_set):
 	'''
 	Bayesian classifier table with absolute counts
@@ -157,7 +157,7 @@ def single_odds(f_table, input):
 	# print "this condit:", odds
 	return odds
 
-def get_accuracy(f_table, testing_set):
+def get_accuracy(f_table, input_set):
 	'''
 	Input: Frequency table and testing set; testing set contains
 	 	   attribute values and classification. We're comparing
@@ -168,6 +168,7 @@ def get_accuracy(f_table, testing_set):
 	'''
 	match = 0.0
 	no_match = 0.0
+	testing_set = copy.deepcopy(input_set)
 	for input in testing_set:
 		# print "==========================\n"
 		test_classification = input[-1].rstrip()
