@@ -58,13 +58,13 @@ def classify_folds(input_set, indices):
 	for test_index, all_train_sets in enumerate(indices):
 		print "test index:", test_index
 		test_set = input_set[test_index]
-		print "testing set:", test_set
+		# print "testing set:", test_set
 		print "training indices:", all_train_sets
 		all_accuracies.append([])
 		average_accuracies.append([])
 		for train_index in all_train_sets:
 			train_set = input_set[train_index]
-			print "training set:", train_set
+			# print "training set:", train_set
 			accuracy = classify(test_set,train_set)
 			all_accuracies[test_index].extend([accuracy])
 		current_average = sum(all_accuracies[test_index])/3.0
@@ -82,14 +82,18 @@ def classify_folds(input_set, indices):
 	# max_index = all_accuracies.index(max_acc)
 	
 	flat_indices = [x for y in indices for x in y]	# flatten list of lists
+	max_ave = max(average_accuracies)
+	max_index = average_accuracies.index(max_ave)
 	print "flat:", flat_indices
-	# best_training = input_set[max_index]
+	best_training = input_set[max_index]
 
 	# print "average acc:", sum(all_accuracies)/len(all_accuracies)
-	# print "highest acc:", max_acc
+	print "highest ave acc:", max_ave
 	# print "list:", max_index
 	print "average accs:", average_accuracies
-	# print "training set best:", best_training
+
+	print "training set best:", best_training
+	return max_index
 
 	
 def main():
@@ -99,9 +103,14 @@ def main():
 	# orig_list = [i for i in range(0,list_size)]
 	input_set = parse_lines("cartrain2.data")
 	print input_set
-	input_set = randomize_list(k, input_set)
+	split_input = randomize_list(k, input_set)
 	indices = training_indices(k)
-	classify_folds(input_set, indices)
+	exclude = classify_folds(split_input, indices)
+	print "to exclude:", exclude
 
+	smaller_training = [split_input[c] for c in range(0,len(split_input)) if c is not exclude]
+	print "smaller training = ", smaller_training
+	flat_smaller_training = [a for b in smaller_training for a in b]
+	print "flat flat_smaller_training:", flat_smaller_training
 if __name__ == '__main__':
 	main()
