@@ -4,6 +4,8 @@ K-fold cross validation
 import random
 from bayes import *
 import copy
+import sys
+
 def training_indices(k):
 	'''
 	Calculate k bins, each bin has indices for training set
@@ -27,12 +29,12 @@ def training_indices(k):
 	for i in range(0,len(x)):
 		to_insert = [b for b in x if b != x[i]]
 		indices[i].extend(to_insert)
-	print "indices:",indices
+	# print "indices:",indices
 	return indices
 
 def randomize_list(k, orig_list):
 	list_size = len(orig_list)
-	print "orig list:",orig_list
+	# print "orig list:",orig_list
 	random_list = []
 	for i in range(0,k):
 		random_list.append([])	# empty partitions
@@ -43,7 +45,7 @@ def randomize_list(k, orig_list):
 			orig_list.remove(x)
 			random_list[i].extend([x])
 
-	print "randomized, partitioned:",random_list
+	# print "randomized, partitioned:",random_list
 	return random_list
 
 def classify_folds(input_set, indices):
@@ -52,14 +54,14 @@ def classify_folds(input_set, indices):
 	 given indices. Indices format is described in training_indices()
 	'''
 	
-	print "\n\ninput_set:",input_set
+	# print "\n\ninput_set:",input_set
 	all_accuracies = []
 	average_accuracies = []
 	for test_index, all_train_sets in enumerate(indices):
-		print "test index:", test_index
+		# print "test index:", test_index
 		test_set = input_set[test_index]
 		# print "testing set:", test_set
-		print "training indices:", all_train_sets
+		# print "training indices:", all_train_sets
 		all_accuracies.append([])
 		average_accuracies.append([])
 		for train_index in all_train_sets:
@@ -70,47 +72,60 @@ def classify_folds(input_set, indices):
 		current_average = sum(all_accuracies[test_index])/3.0
 		average_accuracies[test_index].extend([current_average])
 
-		print "accuracy:", accuracy
-		print "\n"
 
-		# training_set = input_set[train_index]
-		# print "training_set:",training_set
-
-		# classify([test_index], train_index)
-	print "all accs:", all_accuracies
-	# max_acc = max(all_accuracies)
-	# max_index = all_accuracies.index(max_acc)
+	print "Fold % Accuracy:", all_accuracies
+	print "Fold average Accuracy:", average_accuracies
+	
 	
 	flat_indices = [x for y in indices for x in y]	# flatten list of lists
 	max_ave = max(average_accuracies)
-	max_index = average_accuracies.index(max_ave)
-	print "flat:", flat_indices
-	best_training = input_set[max_index]
-
-	# print "average acc:", sum(all_accuracies)/len(all_accuracies)
-	print "highest ave acc:", max_ave
-	# print "list:", max_index
-	print "average accs:", average_accuracies
-
-	print "training set best:", best_training
-	return max_index
+	exclude_index = average_accuracies.index(max_ave)
+	print "Highest Ave. Accuracy:", max_ave
+	# print "flat:", flat_indices
+	best_training = input_set[exclude_index]
+	# print "training set best:", best_training
+	return exclude_index	# index for the test set that needs to be excluded
 
 	
-def main():
-	random.seed(3)
-	list_size = 1000
-	k = 4
+def get_best_training_set(k, input_file):
+	# random.seed(3)
+	# list_size = 1000
+	k = int(k)
 	# orig_list = [i for i in range(0,list_size)]
-	input_set = parse_lines("cartrain2.data")
-	print input_set
+	input_set = parse_lines(input_file)
+	list_size = len(input_set)
+	# input_set = parse_lines("cartrain2.data")
+	# print input_set
 	split_input = randomize_list(k, input_set)
 	indices = training_indices(k)
 	exclude = classify_folds(split_input, indices)
-	print "to exclude:", exclude
+	print "Model will exclude fold #", exclude
 
 	smaller_training = [split_input[c] for c in range(0,len(split_input)) if c is not exclude]
-	print "smaller training = ", smaller_training
+	# print "smaller training = ", smaller_training
 	flat_smaller_training = [a for b in smaller_training for a in b]
-	print "flat flat_smaller_training:", flat_smaller_training
+	# print "flat flat_smaller_training:", flat_smaller_training
+	return flat_smaller_training
+
+def main():
+	if(len(sys.argv)==4):
+		print "....Running k-fold validation to find best model...."
+		k = sys.argv[1]
+		training_file = sys.argv[2]
+		testing_file = sys.argv[3]
+		best_model = get_best_training_set(k, training_file)
+		accuracy = classify(best_model,testing_file)
+	else:
+		print "Please enter the following command:\n"
+		print "~/kfold.py [k] [training file] [testing]\n"
+		print "Since the above was not done, the following is Bayesian classifi-"
+		print "cation on the default car data\n"
+		k = 4
+		training_file = "cartrain2.data"
+		testing_file = "cartest2.data"
+		accuracy = classify(training_file, testing_file)
+	print "....Running model with test data...."
+	print "Accuracy:",accuracy
+
 if __name__ == '__main__':
 	main()

@@ -1,44 +1,20 @@
 '''
-Bayesian classifier for car data
-data source:
+Bayesian classifier for car-buying dataset
+Data source:
             http://archive.ics.uci.edu/ml/datasets/Car+Evaluation
 The data contain classification of cars into unacceptable to very good
 Car attributes include buying price, maintenance price, # doors,
  capacity, luggage size, and safety estimate
 I am using 1000 of the car entries as training set; the remaining 728
  are the training set
-
-Sample data structure:
-unacc = 10
-	   buying = 
-	   		   vhigh = 3
-	   		   high  = 4
-	   		   med   = 1
-	   		   low   = 2
-	   maint = 
-	   		   vhigh ...
-	   doors = 
-	   .
-	   .
-	   .
-	   safety = 
-	           low = 9
-	           med = 1
-	           high = 0
-acc = 32
-		.
-		.
-		.
-		.
-
-Representation as dict:
-{"unacc":{count:10,buying:{vhigh:3,high:4...},maint:{vhigh...},...,"acc":{count:32,buying:{......}}}
-
 '''
 import copy
+import sys
 def make_table(training_set):
 	'''
 	Bayesian classifier table with absolute counts
+	First make table w/ 0 values
+	Next call update_table to tally data entries
 	'''
 	table = {"unacc":{
 					"count":0,
@@ -98,7 +74,7 @@ def parse_lines(f):
 
 def update_table(table, input):
 	'''
-	For each data entry, update all table values
+	For each data entry, update all table values by tallying
 	'''
 	classification = input[-1].rstrip()
 	table[classification]['count'] += 1
@@ -120,10 +96,14 @@ def update_table(table, input):
 	return table
 
 def display_table(table):
+	'''
+	Verbose printing of Bayesian classifier table
+	'''
 	for classification in table:
 		print "Class = ",classification 
 		for attribute in table[classification]:
 			print "\t",attribute,"=", table[classification][attribute]
+
 def freq_table(table):
 	'''
 	Convert Bayesian classifier table (raw integer counts) 
@@ -202,31 +182,44 @@ def classify(training, testing):
 	'''
 	Wrapper for getting accuracy based on Bayesian prediction
 		See get_accuracy() for more description
-	Inputs: Filename string for training, testing set
+	Inputs: Filename string OR list of parsed lines for training, testing set
 	Output: Accuracy of testing set classification 
 
 	'''
+	'''
 	if type(training) == str and type(testing) == str:
 		training_set = parse_lines(training)
-		testing_set = parse_lines(testing)
-	else:
+		testing_set = parse_lines(testing)'''
+	
+	if type(training) == str:
+		training_set = parse_lines(training)
+	else: 
 		training_set = training
+	if type(testing) == str:
+			testing_set = parse_lines(testing)
+	else: 
 		testing_set = testing
 	table = make_table(training_set)
 	f_table = freq_table(table)
 
 	# print "Bayesian classifier table:"
-	display_table(f_table)
+	if __name__ == "__main__":
+		display_table(f_table)
 	# print "=============================="
 	accuracy = get_accuracy(f_table, testing_set)
 	return accuracy
 
-if __name__ == "__main__":
-	# a = parse_lines("cartrain2.data")
-	# b = parse_lines("cartest2.data")
-	# a = [['med', 'med', '3', '2', 'med', 'med', 'unacc\n'], ['med', 'vhigh', '2', 'more', 'big', 'med', 'acc\n'], ['high', 'med', '4', 'more', 'med', 'high', 'acc\n']]
-	# b = [['med', 'vhigh', '2', 'more', 'big', 'med', 'acc\n'], ['vhigh', 'med', '2', '4', 'big', 'med', 'acc\n'], ['med', 'low', '2', 'more', 'small', 'med', 'unacc\n']]
-	# accuracy = classify(a, b)
 
-	accuracy = classify("cartrain2.data", "cartest2.data")
+def main():
+	if(len(sys.argv)==3):
+		train_filename = sys.argv[1]
+		test_filename = sys.argv[2]
+	else:
+		train_filename = "cartrain2.data"
+		test_filename = "cartest2.data"
+	accuracy = classify(train_filename,test_filename)
 	print "Accuracy:", accuracy
+
+if __name__ == "__main__":
+	main()
+
