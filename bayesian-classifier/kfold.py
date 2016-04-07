@@ -72,31 +72,21 @@ def classify_folds(input_set, indices):
 
 		# classify([test_index], train_index)
 	print "all accs:", all_accuracies
+	max_acc = max(all_accuracies)
+	max_index = all_accuracies.index(max_acc)
+	
+	flat_indices = [x for y in indices for x in y]	# flatten list of lists
+	print "flat:", flat_indices
+	# best_training = input_set[max_index]
+
 	print "average acc:", sum(all_accuracies)/len(all_accuracies)
-	
-	'''
-	orig = copy.deepcopy(input_set)
-	print "orig:",orig
-	print "indices:", indices
-	testing_set = input_set[0]
-	print "testing_set:",testing_set
-	training_set = input_set[1]
-	print "training_set:",training_set
-	accuracy = classify(training_set, testing_set)
-	# print "accuracy:",accuracy
-	
-	input_set = copy.deepcopy(orig)
-	print "\n\ninput_set:",input_set
-	print "indices:", indices
-	testing_set = input_set[0]
-	print "testing_set:",testing_set
-	training_set = input_set[2]
-	print "training_set:",training_set
-	accuracy = classify(training_set, testing_set)
-	# print "accuracy:",accuracy'''
+	print "highest acc:", max_acc
+	print "list:", max_index
+	# print "training set best:", best_training
 
-
+	
 def main():
+	random.seed(3)
 	list_size = 1000
 	k = 4
 	# orig_list = [i for i in range(0,list_size)]

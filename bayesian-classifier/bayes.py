@@ -216,7 +216,7 @@ def classify(training, testing):
 	f_table = freq_table(table)
 
 	# print "Bayesian classifier table:"
-	# display_table(f_table)
+	display_table(f_table)
 	# print "=============================="
 	accuracy = get_accuracy(f_table, testing_set)
 	return accuracy
