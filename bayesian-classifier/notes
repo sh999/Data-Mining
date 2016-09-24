@@ -1,0 +1,11 @@
+main()
+	Calculate a single accuracy value with classify()
+
+classify()
+	Parse training, testing sets
+	Make bayesian classifier frequency table 
+	Calculate accuracy by comparing test set with freq table byc alling get_accuracy()
+
+get_accuracy()
+	Loop through test set and see how accurate the class-
+	ifier table is on predicting test set
